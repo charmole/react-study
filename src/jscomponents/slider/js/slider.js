@@ -21,10 +21,11 @@
 
     this.timer = null;
 
+    this.stayTime = this.stayTime || 1000 ;
     // this.pageNum 必须传入
     // 初始化动作
     this._init();
-    
+
   }
 
   _.extend( Slider.prototype, _.emitter );
@@ -45,15 +46,16 @@
         clearInterval(_self.timer);
       });
       _self.container.addEventListener('mouseleave', function(){
+        //函数里面嵌套函数this会变，或者下面方法
         _self._step();
       });
+      // this.container.addEventListener('mouseleave', this._step.bind(this));
     },
-    //增加圆点数..$("#").show().siblings().hide(); 
+    //增加圆点数..$("#").show().siblings().hide();
     _addCircle: function(){
-      // var _self = this;
       for (i = 0; i < this.pageNum; i++) {
-          var span = document.createElement('span');
-          this.circle.appendChild(span);
+        var span = document.createElement('span');
+        this.circle.appendChild(span);
       }
     },
     //显示第一个
@@ -65,26 +67,25 @@
       var _self = this;
       _self.timer= setInterval(function(){
         _self.nav();
-      },2000);
+      },_self.stayTime);
     },
 
     // 直接跳转到指定页
     nav: function( pageIndex ){
-      var _self = this ;
-      _self.slideIndex = pageIndex ? pageIndex : _self.slideIndex;
-      for (var i = _self.pageNum - 1; i >= 0; i--) {
-            if(_self.slideIndex == i){
-               _.addClass(_self.slides[i], 'active');
-            }else{
-               _.delClass(_self.slides[i], 'active');
-            }
-          }
-        //如果最后个，重置为第一个
-        if(_self.slideIndex == _self.pageNum-1){
-          _self.slideIndex = 0;
+      this.slideIndex = pageIndex ? pageIndex : this.slideIndex;
+      for (var i = this.pageNum - 1; i >= 0; i--) {
+        if(this.slideIndex == i){
+          _.addClass(this.slides[i], 'active');
         }else{
-           _self.slideIndex++;
+          _.delClass(this.slides[i], 'active');
         }
+      }
+      //如果最后个，重置为第一个
+      if(this.slideIndex == this.pageNum-1){
+        this.slideIndex = 0;
+      }else{
+        this.slideIndex++;
+      }
     },
     // 下一页
     next: function(){
@@ -93,7 +94,7 @@
     prev: function(){
     }
 
-    
+
   })
 
 
