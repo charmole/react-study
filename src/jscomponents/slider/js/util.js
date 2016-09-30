@@ -61,7 +61,44 @@ var util = (function(){
         }
         return this;
       }
-    }
+    },
+    ajax : function(opt){
+      //不管ie6浏览器
+      var request = new XMLHttpRequest();
+      //默认get
+      function params(data){
+        var arr = [];
+        for(var i in data){
+          arr.push(encodeURIComponent(i) + "=" + encodeURIComponent(data[i]));
+        }
+        return arr.join("&");
+      }
 
+
+      if(obj.async === true){
+        // 异步的时候需要触发onreadystatechange事件
+        xhr.onreadystatechange = function(){
+          // 执行完成
+          if(xhr.readyState == 4){
+            callBack();
+          }
+        }
+      }
+
+
+
+      if(opt.method == 'get'){
+        //
+      }
+      request.open(opt.method,opt.url,opt.async);
+
+      if(opt.method == 'post'){
+        request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        request.send(opt.data);
+      }else{
+        request.send(null);
+      }
+    }
+//http://www.tuicool.com/articles/v2YBFrF
   }
 })()
